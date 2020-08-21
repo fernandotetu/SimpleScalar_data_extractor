@@ -27,6 +27,12 @@
         $(function(){
             $('.collapsible').collapsible();
 
+            $("input").change(function() {
+                
+                    $('.item').prop('checked', $(this).is(":checked"))
+                
+            })
+
             const entries = [];
             entries.push({d:'sim_num_insn', v:0});
             entries.push({d:'sim_num_refs', v:1});
@@ -75,23 +81,23 @@
                
                match = simulator_data.match(regex)
                
-               
-               
-               const checkedItem = $('.item:checked');
-               let html = '';
-               let aux;
-               const out1 = $('#out1');
-               const out2 = $('#out2');
-               out2.html('');
-               out1.html('');
-               for(i=0; i < checkedItem.length; i++
-                ) {
-                    index = checkedItem[i].value;
-                    aux = match[ index ];
-                    if(aux){
-                        out1.append( entries[index].d+"<br>");
-                        out2.append( aux+"<br>");
-                    }
+               if( match ){
+
+                    const checkedItem = $('.item:checked');
+                    let html = '';
+                    let aux;
+                    const out1 = $('#out1');
+                    const out2 = $('#out2');
+                    out2.html('');
+                    out1.html('');
+                    for(i=0; i < checkedItem.length; i++) {
+                            index = checkedItem[i].value;
+                            aux = match[ index ];
+                            if(aux){
+                                out1.append( entries[index].d+"<br>");
+                                out2.append( aux+"<br>");
+                            }
+                        }
                 }
                //.html( html );
                return false;
@@ -121,7 +127,7 @@
             </p>
             <ol>
                 <li>Execute the simulation on the SimpleScalar</li>
-                <li>Copy the terminal outpush and paste in the text field</li>
+                <li>Copy the terminal output and paste in the text field</li>
                 <li>Click the extract button</li>
             </li>
           </div>
@@ -129,17 +135,17 @@
             
         <form class="col s12">
             <div class="row">
-                <div class="inpush-field col s12">
-                <inpush id="regex" type="text" value="(0[xX][0-9a-fA-F]+)|\b(\d*[\.]?\d+[k]?)"  class="validate">
-                <label for="regex">Regex</label>
+                <div class="input-field col s12">
+                    <label for="regex">Regex</label>
+                    <input id="regex" type="text" value="(0[xX][0-9a-fA-F]+)|\b(\d*[\.]?\d+[k]?)"  class="validate">
                 </div>
             </div>
             <div class="row">
-                <div class="inpush-field col s12">
+                <div class="input-field col s12">
                 <textarea placeholder="paste here the simulation result"  id="txtSimulator" class="materialize-textarea"></textarea>
-                <label for="textarea1">SimpleScalar outpush</label>
+                <label for="textarea1">SimpleScalar output</label>
                 </div>
-                <div class="inpush-field col s12 ">
+                <div class="input-field col s12 ">
                    
                    
                     <div class="col s8 sm12">
@@ -147,7 +153,17 @@
                             <li>
                               <div class="collapsible-header"><i class="material-icons">filter_alt</i>Field filter</div>
                               <div class="collapsible-body" id="checkboxes" >
-                                   
+                                <div class="switch">
+                                    <div  class="right-align">
+
+                                        <label>
+                                            
+                                            <input id="chkAll" type="checkbox" checked >
+                                            <span class="lever"></span>
+                                            select all
+                                        </label>
+                                    </div>    
+                                  </div>
                                   
                               </div>
                             </li>
