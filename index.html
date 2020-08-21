@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Regex to extract simpleScalar data</title>
+    <!--Import Google Icon Font-->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <!-- Compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <style type="text/css">
+    .item-cnt{
+        display: block;
+    }
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> 
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script type="text/JavaScript">
+        $(function(){
+            $('.collapsible').collapsible();
+
+            const entries = [];
+            entries.push({d:'sim_num_insn', v:0});
+            entries.push({d:'sim_num_refs', v:1});
+            entries.push({d:'sim_elapsed_time', v:2});
+            entries.push({d:'sim_inst_rate', v:3});
+            entries.push({d:'ul1.accesses', v:4});
+            entries.push({d:'ul1.hits', v:5});
+            entries.push({d:'ul1.misses', v:6});
+            entries.push({d:'ul1.replacements', v:7});
+            entries.push({d:'ul1.writebacks', v:8});
+            entries.push({d:'ul1.invalidations', v:9});
+            entries.push({d:'ul1.miss_rate', v:10});
+            entries.push({d:'ul1.repl_rate', v:11});
+            entries.push({d:'ul1.wb_rate', v:12});
+            entries.push({d:'ul1.inv_rate', v:13});
+            entries.push({d:'ld_text_base', v:14});
+            entries.push({d:'ld_text_size', v:15});
+            entries.push({d:'ld_data_base', v:16});
+            entries.push({d:'ld_data_size', v:17});
+            entries.push({d:'ld_stack_base', v:18});
+            entries.push({d:'ld_stack_size', v:19});
+            entries.push({d:'ld_prog_entry', v:20});
+            entries.push({d:'ld_environ_base', v:21});
+            entries.push({d:'ld_target_big_endian', v:22});
+            entries.push({d:'mem.page_count', v:23});
+            entries.push({d:'mem.page_mem', v:24});
+            entries.push({d:'mem.ptab_misses', v:25});
+            entries.push({d:'mem.ptab_accesses', v:26});
+            entries.push({d:'mem.ptab_miss_rate', v:27});
+            const checks = $('#checkboxes')
+            entries.forEach(item => {
+
+                
+                html=`<label class="item-cnt"><input type="checkbox" class="item" value="${item.v}" checked /> <span>${item.d}</span></label>`;
+                                    
+                checks.append( html )
+            });
+
+
+
+            $('#btnExt').click(()=>{
+               
+               const regex = new RegExp(/(0[xX][0-9a-fA-F]+)|\b(\d*[\.]?\d+[k]?)/g);
+               const simulator_data = $('#txtSimulator').val();
+               let data;
+               
+               match = simulator_data.match(regex)
+               
+               
+               
+               const checkedItem = $('.item:checked');
+               let html = '';
+               let aux;
+               const out1 = $('#out1');
+               const out2 = $('#out2');
+               out2.html('');
+               out1.html('');
+               for(i=0; i < checkedItem.length; i++
+                ) {
+                    index = checkedItem[i].value;
+                    aux = match[ index ];
+                    if(aux){
+                        out1.append( entries[index].d+"<br>");
+                        out2.append( aux+"<br>");
+                    }
+                }
+               //.html( html );
+               return false;
+            })
+        })
+    </script>
+</head>
+  <body>
+    <nav class="indigo" role="navigation">
+      <div class="nav-wrapper container">
+        <a id="logo-container" href="" class="brand-logo"
+          >SimpleScalar data extractor</a
+        >
+      </div>
+    </nav>
+    <div class="container">
+      <div class="section">
+        <!--   Icon Section   -->
+        <div class="row">
+          <div class="col s12">
+            <h5 class="">How it works</h5>
+
+            <p class="light">
+              This tool uses regular expressions to extract data from the
+              <a href="http://www.simplescalar.com/">SimpleScalar</a> simulator.
+              Perform simulations and retrieve data in a simplified way.
+            </p>
+            <ol>
+                <li>Execute the simulation on the SimpleScalar</li>
+                <li>Copy the terminal outpush and paste in the text field</li>
+                <li>Click the extract button</li>
+            </li>
+          </div>
+          
+            
+        <form class="col s12">
+            <div class="row">
+                <div class="inpush-field col s12">
+                <inpush id="regex" type="text" value="(0[xX][0-9a-fA-F]+)|\b(\d*[\.]?\d+[k]?)"  class="validate">
+                <label for="regex">Regex</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="inpush-field col s12">
+                <textarea placeholder="paste here the simulation result"  id="txtSimulator" class="materialize-textarea"></textarea>
+                <label for="textarea1">SimpleScalar outpush</label>
+                </div>
+                <div class="inpush-field col s12 ">
+                   
+                   
+                    <div class="col s8 sm12">
+                        <ul class="collapsible">
+                            <li>
+                              <div class="collapsible-header"><i class="material-icons">filter_alt</i>Field filter</div>
+                              <div class="collapsible-body" id="checkboxes" >
+                                   
+                                  
+                              </div>
+                            </li>
+                            
+                           
+                          </ul>
+                    </div>   
+                    <div class="col s4 sm12 right-align"  >
+                        
+                        <a id="btnExt" class="waves-effect waves-light btn">extract</a>
+                    </div>   
+
+
+                   
+                </div>
+            </div>
+            
+        </form>
+        </div>
+     </div> 
+     <div class="row" id="result">
+         
+        <div class="col s6 xs12" id="out1" >
+ 
+        </div>    
+        <div class="col s6 xs12" id="out2" >
+ 
+         </div>   
+     </div>
+    </div>
+    
+  </body>
+</html>
