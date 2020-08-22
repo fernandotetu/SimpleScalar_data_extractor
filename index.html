@@ -95,13 +95,43 @@
                             aux = match[ index ];
                             if(aux){
                                 out1.append( entries[index].d+"<br>");
+                                aux = aux.replace(".",",");
                                 out2.append( aux+"<br>");
                             }
                         }
                 }
                //.html( html );
                return false;
-            })
+            });
+
+
+            jQuery.fn.selectText = function(){
+                this.find('input').each(function() {
+                    if($(this).prev().length == 0 || !$(this).prev().hasClass('p_copy')) { 
+                        $('<p class="p_copy" style="position: absolute; z-index: -1;"></p>').insertBefore($(this));
+                    }
+                    $(this).prev().html($(this).val());
+                });
+                var doc = document;
+                var element = this[0];
+                if (doc.body.createTextRange) {
+                    var range = document.body.createTextRange();
+                    range.moveToElementText(element);
+                    range.select();
+                } else if (window.getSelection) {
+                    var selection = window.getSelection();        
+                    var range = document.createRange();
+                    range.selectNodeContents(element);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            };
+            $('#btncp').click(function(){
+              
+              $('#out2').selectText();
+              document.execCommand("copy");
+              return false;
+            });
         })
     </script>
 </head>
@@ -184,6 +214,7 @@
         </form>
         </div>
      </div> 
+     <a id="btncp" class="waves-effect waves-light btn">copy</a>
      <div class="row" id="result">
          
         <div class="col s6 xs12" id="out1" >
